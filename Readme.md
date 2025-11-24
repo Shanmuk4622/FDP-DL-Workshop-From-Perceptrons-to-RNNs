@@ -1,86 +1,102 @@
-# Deep Learning FDP — From Perceptrons to Advanced Applications
 
-Welcome! This repository contains the materials for a short hands-on Faculty Development Programme (FDP) focused on practical deep learning: from perceptrons and MLPs to efficient CNNs and RNNs.
+# FDP — Deep Learning: Perceptrons to RNNs (Colab-ready)
 
-This repo uses Jupyter Notebooks to present theory, code, and exercises. Each notebook is written to be followable in a workshop setting and runnable on a modern Python environment.
+This folder contains the hands-on notebooks for a short FDP on practical deep learning. All notebooks are compatible with Google Colab — below are explicit, copy-paste-ready instructions for running them in Colab, handling datasets (Kaggle/Drive), and using GPU resources.
 
-**Notebooks in this folder**
-- `Day_1_Intro_to_ANNs.ipynb` — Foundations and building a Multi-Layer Perceptron (MLP).
-- `Day 2 - The Limits of MLPs  part-1 .ipynb` — Demonstrating MLP limitations and introductory CNN concepts.
-- `Day 2 - The Limits of MLPs  part-2.ipynb` — CNN optimization and regularization techniques.
-- `Day_3_Optimizing_our_CNN.ipynb` — Building and improving CNN architectures.
-- `Day_3_Optimizing_our_CNN_part_2.ipynb` — Transfer learning and advanced strategies.
+**What’s in this folder**
+- Notebooks (examples): `Day_1_Intro_to_ANNs.ipynb`, `Day 2 - The Limits of MLPs  part-1 .ipynb`, `Day 2 - The Limits of MLPs  part-2.ipynb`, `Day_3_Optimizing_our_CNN.ipynb`, `Day_3_Optimizing_our_CNN_part_2.ipynb`, plus additional Day 3/4 RNN/transfer-learning notebooks.
+- Notes: `Read me.txt`.
+- Optional dataset folder: `dataset/` (used by Day 2/3 image notebooks).
 
-**Workshop Overview**
-- **Goal:** Give participants practical experience building and training neural networks, understanding their limitations, and applying modern techniques (regularization, transfer learning, RNNs).
-- **Format:** Short theory sections followed by hands-on notebooks. Notebooks are organized by day/topic.
+**Open a notebook in Colab**
+- From local: go to `https://colab.research.google.com` and upload the `.ipynb` file.
+- From GitHub: open `https://colab.research.google.com/github/<username>/<repo>/blob/main/<path-to-notebook>.ipynb` (replace placeholders).
 
-**High-level Topics**
-- Day 1 — Perceptrons & MLPs: linear vs. nonlinear classifiers, activation functions, loss, and a TensorFlow/Keras MLP example (MNIST).
-- Day 2 — Optimization & Efficient CNNs: backpropagation recap, optimizers, dropout, batch normalization, and building efficient CNNs.
-- Day 3 — Advanced CNNs & Transfer Learning: model design, parameter calculation, and using pre-trained backbones (e.g. EfficientNet) for fast, accurate models.
-- Day 4 — RNNs: sequence models, LSTM/GRU, and a text classification example (IMDB).
-- Day 5 — Time-series & Advanced Applications: applying RNNs/LSTMs to regression/time-series forecasting problems.
-
-**Setup & Prerequisites**
-- **Python:** 3.8 or newer (Anaconda recommended).
-- **Recommended:** create a virtual environment or conda env.
-
-Example (conda):
-```
-conda create -n dl-fdp python=3.9 -y; conda activate dl-fdp
-pip install --upgrade pip
-pip install tensorflow pandas matplotlib scikit-learn jupyterlab
+**Enable GPU**
+- Menu → `Runtime` → `Change runtime type` → select `GPU` → `Save`.
+- Verify with:
+```python
+import tensorflow as tf
+print('TF', tf.__version__)
+print('GPUs:', tf.config.list_physical_devices('GPU'))
 ```
 
-Or using pip/venv:
-```
-python -m venv .venv; .\\.venv\\Scripts\\Activate.ps1
-pip install --upgrade pip
-pip install tensorflow pandas matplotlib scikit-learn jupyterlab
-```
-
-**Datasets**
-- **MNIST & IMDB:** loaded automatically via Keras datasets inside the notebooks; internet required on first run.
-- **Fruits dataset (Fresh vs Rotten):** download manually from Kaggle (search "Fresh and Rotten Fruits Dataset").
-    - Download and extract so the folder name is `dataset/` in the repository root.
-    - Expected structure: `dataset/train/...` and `dataset/test/...` (check the notebook for exact paths used).
-- **Time-series examples:** some notebooks load CSVs from URLs or expect a local CSV — check the specific notebook.
-
-**How to Run**
-- Open the repo folder in VS Code or start JupyterLab from the repo root:
-```
-jupyter lab
-```
-- Open the notebook you want (e.g., `Day_1_Intro_to_ANNs.ipynb`) and run cells sequentially.
-
-**Recommended Workflow**
-- Start with `Day_1_Intro_to_ANNs.ipynb` to ensure environment and basic TensorFlow code runs.
-- For image-based notebooks using the Fruits dataset, confirm the `dataset/` folder is present in the repo root.
-
-**Files & Structure (expected)**
-```
-<repo root>/
-├─ Day_1_Intro_to_ANNs.ipynb
-├─ Day 2 - The Limits of MLPs  part-1 .ipynb
-├─ Day 2 - The Limits of MLPs  part-2.ipynb
-├─ Day_3_Optimizing_our_CNN.ipynb
-├─ Day_3_Optimizing_our_CNN_part_2.ipynb
-├─ Readme.md
-├─ Read me.txt
-└─ dataset/   <-- Optional: place here for Day 2 & 3 image notebooks
+**Install packages (run once per session)**
+```python
+!pip install --upgrade pip
+!pip install tensorflow pandas matplotlib scikit-learn kaggle
 ```
 
-**Notes & Tips**
-- If you rename notebooks, update references inside the files or this README accordingly.
-- GPU: If you have a compatible GPU and want faster training, install `tensorflow-gpu` (or the appropriate TF build) and verify TensorFlow sees the GPU.
-- If a notebook expects a different dataset path, open its top cells — paths are documented there.
+**Mount Google Drive (recommended for persistent datasets & checkpoints)**
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+# Example persistent path: '/content/drive/MyDrive/dataset'
+```
 
-**Questions / Contact**
-If you want me to:
-- Rename notebooks to consistent filenames;
-- Create a `requirements.txt` or `environment.yml` for reproducible installs; or
-- Add a small demo runner script to execute key notebooks,
-tell me which option and I will implement it.
+**Download Kaggle dataset (Fruits) in Colab**
+Option A — upload the dataset zip to Drive and unzip into `MyDrive`.
 
-Enjoy the workshop!
+Option B — use the Kaggle API (requires `kaggle.json`):
+```bash
+# upload kaggle.json to Colab (or keep in Drive and copy from Drive path)
+!mkdir -p ~/.kaggle
+!cp /content/kaggle.json ~/.kaggle/kaggle.json
+!chmod 600 ~/.kaggle/kaggle.json
+!kaggle datasets download -d <dataset-identifier> -p /content --unzip
+```
+After downloading, move or unzip files into Drive if you want persistence:
+```bash
+!cp -r /content/dataset /content/drive/MyDrive/dataset
+```
+
+**Paths & recommended pattern**
+- Persistent data (recommended): `'/content/drive/MyDrive/dataset'`.
+- Ephemeral (VM-only): `'/content/dataset'` (lost after VM reset).
+- Use a top cell in each notebook to set `DATA_ROOT` depending on whether Drive is mounted.
+
+**Colab helper snippet**
+Put this at the top of a notebook to auto-detect Colab, mount Drive, and set `DATA_ROOT`:
+```python
+import os
+def setup_colab(data_folder_name='dataset'):
+    DATA_ROOT = './dataset'
+    try:
+        import google.colab
+        from google.colab import drive
+        drive.mount('/content/drive')
+        DATA_ROOT = f'/content/drive/MyDrive/{data_folder_name}'
+    except Exception:
+        # not running in Colab or user skipped mounting
+        DATA_ROOT = './dataset'
+    print('DATA_ROOT =', DATA_ROOT)
+    return DATA_ROOT
+
+DATA_ROOT = setup_colab()
+```
+
+**Notebook map — quick descriptions**
+- `Day_1_Intro_to_ANNs.ipynb`: Perceptrons and MLP basics; MNIST training example.
+- `Day_2_The_MLP_Failure_(Part_1).ipynb` / `Day 2 - The Limits of MLPs  part-1 .ipynb`: Show MLP limitations on image tasks.
+- `Day_2_Introduction_to_CNN_(part_2).ipynb` / `Day 2 - The Limits of MLPs  part-2.ipynb`: CNN intro, optimization and regularization techniques.
+- `Day_3_Optimizing_our_CNN*.ipynb`: Several notebooks demonstrating CNN design, BatchNorm, Dropout, and training.
+- `Day_3_Transfer_Learning_*.ipynb`: Transfer learning with pretrained models and fine-tuning.
+- `Day_4_RNNs_for_Language_Translation_(Seq2Seq)*.ipynb`: Seq2Seq RNN/LSTM examples for translation and sequence tasks.
+
+**Colab checklist (paste at top of each notebook)**
+- Enable GPU runtime.
+- Run package install cell.
+- Mount Drive (if using persistent data).
+- Set `DATA_ROOT` to Drive path when mounted.
+
+**Common issues & fixes**
+- Package/version errors: pin versions using a `requirements.txt` and install with `!pip install -r requirements.txt`.
+- Dataset not found: confirm `DATA_ROOT` and whether the dataset was placed in Drive or the VM.
+- GPU not visible: change runtime type to GPU and re-run the verification cell.
+
+**Follow-ups I can implement**
+- Create `requirements.txt` or `environment.yml` to pin versions.
+- Add `check_data.py` that prints dataset folders and counts (useful when mounting Drive).
+- Standardize notebook filenames (remove spaces/duplicates) and update README links.
+
+Tell me which of the follow-ups you want and I'll implement it next.
